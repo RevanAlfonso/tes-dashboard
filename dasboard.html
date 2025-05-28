@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard e-Monev</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+    
+    .header {
+      background: rgba(0, 0, 0, 0.8);
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header-left {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffd700;
+    }
+    
+    .header-center {
+      text-align: center;
+      flex: 1;
+      margin: 0 20px;
+    }
+    
+    .header-center h1 {
+      font-size: 20px;
+      color: #ffd700;
+      margin-bottom: 5px;
+    }
+    
+    .header-center h2 {
+      font-size: 16px;
+      color: white;
+      font-weight: normal;
+    }
+    
+    .header-right {
+      font-size: 18px;
+      color: white;
+    }
+    
+    .container {
+      display: flex;
+      min-height: calc(100vh - 80px);
+    }
+    
+    .sidebar {
+      width: 250px;
+      background: rgba(0, 0, 0, 0.9);
+      color: white;
+      padding: 20px 0;
+    }
+    
+    .nav-item {
+      display: flex;
+      align-items: center;
+      padding: 15px 30px;
+      cursor: pointer;
+      transition: background 0.3s;
+      border-left: 4px solid transparent;
+    }
+    
+    .nav-item:hover, .nav-item.active {
+      background: rgba(255, 255, 255, 0.1);
+      border-left-color: #ffd700;
+    }
+    
+    .nav-item i {
+      margin-right: 15px;
+      width: 20px;
+      color: #ffd700;
+    }
+    
+    .main-content {
+      flex: 1;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .stat-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      transition: transform 0.3s;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .stat-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 20px;
+      font-size: 24px;
+      color: white;
+    }
+    
+    .stat-content h3 {
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .stat-content p {
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .blue { background: linear-gradient(135deg, #667eea, #764ba2); }
+    .green { background: linear-gradient(135deg, #56ab2f, #a8e6cf); }
+    .red { background: linear-gradient(135deg, #ff6b6b, #ffa8a8); }
+    .orange { background: linear-gradient(135deg, #f7971e, #ffd200); }
+    
+    .charts-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .chart-card {
+      background: white;
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+    
+    .chart-card h3 {
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    
+    .chart-container {
+      position: relative;
+      height: 300px;
+    }
+    
+    @media (max-width: 1200px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      
+      .sidebar {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        padding: 10px 0;
+      }
+      
+      .nav-item {
+        flex-shrink: 0;
+        border-left: none;
+        border-bottom: 4px solid transparent;
+      }
+      
+      .nav-item:hover, .nav-item.active {
+        border-left: none;
+        border-bottom-color: #ffd700;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">e-Monev Reskrimsus<br><small style="font-size: 14px;">Polda Sumut</small></div>
+    <div class="header-center">
+      <h1>SISTEM MONITORING DAN EVALUASI KINERJA</h1>
+      <h2>PENANGANAN KASUS TINDAK PIDANA KHUSUS</h2>
+    </div>
+    <div class="header-right">Polda Sumut</div>
+  </div>
+
+  <div class="container">
+    <div class="sidebar">
+      <div class="nav-item active">
+        <i class="fas fa-home"></i>
+        <span>Dashboard</span>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-file-alt"></i>
+        <span>Laporan</span>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-chart-bar"></i>
+        <span>Analisis</span>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-cog"></i>
+        <span>Pengaturan</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon blue">
+            <i class="fas fa-search"></i>
+          </div>
+          <div class="stat-content">
+            <h3>120</h3>
+            <p>Total<br>Kasus</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon green">
+            <i class="fas fa-check"></i>
+          </div>
+          <div class="stat-content">
+            <h3>80</h3>
+            <p>Kasus<br>Selesai</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon red">
+            <i class="fas fa-folder-open"></i>
+          </div>
+          <div class="stat-content">
+            <h3>40</h3>
+            <p>Kasus<br>Berjalan</p>
+          </div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-icon orange">
+            <i class="fas fa-clock"></i>
+          </div>
+          <div class="stat-content">
+            <h3>45 hari</h3>
+            <p>Rata-Rata Waktu<br>Penyelesaian</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>KINERJA KASUS PER SUBDIT</h3>
+          <div class="chart-container">
+            <canvas id="barChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h3>STATUS KASUS</h3>
+          <div class="chart-container">
+            <canvas id="pieChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3>DATA-RATA KASUS</h3>
+          <div class="chart-container">
+            <canvas id="doughnutChart"></canvas>
+          </div>
+        </div>
+        
+        <div class="chart-card">
+          <h3>TREN PENYELESAIAN KASUS</h3>
+          <div class="chart-container">
+            <canvas id="lineChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+  <script>
+    Chart.defaults.font.family = 'Segoe UI';
+    Chart.defaults.font.size = 12;
+    
+    // Register the datalabels plugin
+    Chart.register(ChartDataLabels);
+
+    // Bar Chart
+    new Chart(document.getElementById("barChart"), {
+      type: 'bar',
+      data: {
+        labels: ["Subdit I", "Subdit II", "Subdit III", "Subdit IV"],
+        datasets: [
+          { 
+            label: "Berjalan", 
+            data: [30, 25, 22, 18], 
+            backgroundColor: '#4285f4',
+            borderRadius: 4
+          },
+          { 
+            label: "Selesai", 
+            data: [50, 45, 40, 25], 
+            backgroundColor: '#34a853',
+            borderRadius: 4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: '#f0f0f0'
+            }
+          },
+          x: {
+            grid: {
+              display: false
+            }
+          }
+        }
+      }
+    });
+
+    // Pie Chart
+    new Chart(document.getElementById("pieChart"), {
+      type: 'pie',
+      data: {
+        labels: ["Berjalan", "Selesai"],
+        datasets: [{
+          data: [67, 33],
+          backgroundColor: ['#34a853', '#ea4335']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'right',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.label + ': ' + context.parsed + '%';
+              }
+            }
+          },
+          datalabels: {
+            display: true,
+            color: 'white',
+            font: {
+              weight: 'bold',
+              size: 14
+            },
+            formatter: (value, context) => {
+              return value + '%';
+            }
+          }
+        }
+      }
+    });
+
+    // Doughnut Chart
+    new Chart(document.getElementById("doughnutChart"), {
+      type: 'doughnut',
+      data: {
+        labels: ["Subdit I", "Subdit III"],
+        datasets: [{
+          data: [67, 33],
+          backgroundColor: ['#4285f4', '#34a853']
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'bottom',
+          },
+          tooltip: {
+            callbacks: {
+              label: function(context) {
+                return context.label + ': ' + context.parsed + '%';
+              }
+            }
+          },
+          datalabels: {
+            display: true,
+            color: 'white',
+            font: {
+              weight: 'bold',
+              size: 14
+            },
+            formatter: (value, context) => {
+              return value + '%';
+            }
+          }
+        }
+      }
+    });
+
+    // Line Chart
+    new Chart(document.getElementById("lineChart"), {
+      type: 'line',
+      data: {
+        labels: ["Nov", "Des", "Jan", "Feb", "Apr"],
+        datasets: [
+          { 
+            label: "Berjalan", 
+            data: [20, 25, 40, 28, 30], 
+            borderColor: '#4285f4',
+            backgroundColor: 'rgba(66, 133, 244, 0.1)',
+            fill: false,
+            tension: 0.4
+          },
+          { 
+            label: "Selesai", 
+            data: [5, 15, 30, 40, 50], 
+            borderColor: '#34a853',
+            backgroundColor: 'rgba(52, 168, 83, 0.1)',
+            fill: false,
+            tension: 0.4
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            position: 'top',
+          }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            grid: {
+              color: '#f0f0f0'
+            }
+          },
+          x: {
+            grid: {
+              color: '#f0f0f0'
+            }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
